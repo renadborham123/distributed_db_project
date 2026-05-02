@@ -4,73 +4,140 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Distributed E-Commerce Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Macondo&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="/frontend/style.css" />
   </head>
   <body>
+    <div class="page-noise" aria-hidden="true"></div>
+
     <main class="container">
-      <header class="hero">
-        <p class="eyebrow">Distributed Database Demo</p>
-        <h1>Simple E-Commerce with Simulated MongoDB Shards</h1>
-        <p class="hero-text">
-          Products are routed to different MongoDB shards using
-          <code>product_id % 2</code>. This keeps the UI simple while clearly
-          showing how distributed routing works.
-        </p>
+      <header class="hero retro-frame">
+        <div class="masthead">
+          <p class="eyebrow">Distributed Database Demo</p>
+          <span class="status-pill">Retro Console Edition</span>
+        </div>
+
+        <div class="hero-grid">
+          <div>
+            <h1>Shard Shop</h1>
+            <p class="hero-text">
+              A simple e-commerce system that shows how a distributed app routes
+              product requests across logical MongoDB shards and can report
+              replica-set health from the same interface.
+            </p>
+          </div>
+
+          <aside class="hero-note">
+            <p class="note-label">Routing Rule</p>
+            <p><code>product_id % 2</code></p>
+            <p class="note-copy">
+              Even IDs and odd IDs are written to different shard databases.
+            </p>
+          </aside>
+        </div>
+
+        <div class="hero-marquee" aria-hidden="true">
+          <span>Create Products</span>
+          <span>Route Requests</span>
+          <span>Build Carts</span>
+          <span>Check Replication</span>
+        </div>
       </header>
 
-      <section class="panel">
-        <h2>إضافة منتج</h2>
+      <section class="panel retro-frame">
+        <div class="section-heading">
+          <p class="section-kicker">Inventory Desk</p>
+          <h2>Add Product</h2>
+        </div>
+
         <form id="product-form" class="grid-form">
           <input id="name" type="text" placeholder="Product name" required />
-          <input id="price" type="number" min="0.01" step="0.01" placeholder="Price" required />
+          <input
+            id="price"
+            type="number"
+            min="0.01"
+            step="0.01"
+            placeholder="Price"
+            required
+          />
           <textarea id="description" placeholder="Description" required></textarea>
           <button type="submit">Create Product</button>
         </form>
       </section>
 
-      <section class="panel">
+      <section class="panel retro-frame">
         <div class="panel-header">
-          <h2>عرض المنتجات</h2>
+          <div class="section-heading">
+            <p class="section-kicker">Catalog Window</p>
+            <h2>Browse Products</h2>
+          </div>
           <button id="refresh-products" type="button">Refresh</button>
         </div>
+
         <div id="products" class="cards"></div>
       </section>
 
-      <section class="panel">
+      <section class="panel retro-frame">
         <div class="panel-header">
-          <h2>سلة المشتريات</h2>
+          <div class="section-heading">
+            <p class="section-kicker">Basket Builder</p>
+            <h2>Shopping Cart</h2>
+          </div>
           <button id="create-cart" type="button">Create New Cart</button>
         </div>
+
         <p class="meta">Current cart ID: <strong id="cart-id">Not created yet</strong></p>
+
         <form id="cart-form" class="inline-form">
           <input id="product-id" type="number" min="1" placeholder="Product ID" required />
           <button type="submit">Add To Cart</button>
         </form>
+
         <div id="cart-details" class="result-box"></div>
       </section>
 
-      <section class="panel">
-        <h2>إتمام الطلب</h2>
+      <section class="panel retro-frame">
+        <div class="section-heading">
+          <p class="section-kicker">Checkout Booth</p>
+          <h2>Place Order</h2>
+        </div>
+
         <button id="place-order" type="button">Place Order</button>
         <div id="order-details" class="result-box"></div>
       </section>
 
-      <section class="panel explanation">
+      <section class="panel retro-frame explanation">
         <div class="panel-header">
-          <h2>Replica Set Status</h2>
+          <div class="section-heading">
+            <p class="section-kicker">Node Watch</p>
+            <h2>Replica Set Status</h2>
+          </div>
           <button id="refresh-cluster" type="button">Refresh Cluster</button>
         </div>
+
         <div id="cluster-status" class="result-box"></div>
       </section>
 
-      <section class="panel explanation">
-        <h2>How the distribution works</h2>
-        <ul>
+      <section class="panel retro-frame explanation">
+        <div class="section-heading">
+          <p class="section-kicker">Field Guide</p>
+          <h2>How Distribution Works</h2>
+        </div>
+
+        <ul class="bullet-list">
           <li>FastAPI does not talk to MongoDB directly from each endpoint.</li>
           <li>A routing layer decides the correct shard using the product ID.</li>
           <li>Even product IDs and odd product IDs end up in different databases.</li>
           <li>Logs show which shard each product request uses.</li>
-          <li>A 3-node MongoDB replica set can be used underneath to demonstrate replication and failover.</li>
+          <li>
+            A 3-node MongoDB replica set can be used underneath to demonstrate
+            replication and failover.
+          </li>
         </ul>
       </section>
     </main>

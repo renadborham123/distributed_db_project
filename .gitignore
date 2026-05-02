@@ -1,0 +1,13 @@
+# Python caches
+__pycache__/
+*.py[cod]
+
+# Local runtime logs
+run_logs/
+
+# Local MongoDB replica-set data generated for demos
+local_replica/
+
+# Editor and OS files
+.DS_Store
+Thumbs.db

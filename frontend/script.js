@@ -15,6 +15,15 @@ const refreshClusterButton = document.getElementById("refresh-cluster");
 const clusterStatus = document.getElementById("cluster-status");
 const toast = document.getElementById("toast");
 
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
 function showToast(message, isError = false) {
   toast.textContent = message;
   toast.className = `toast ${isError ? "error" : "success"}`;
@@ -54,9 +63,9 @@ function renderProducts(products) {
             <span class="tag">Product #${product.id}</span>
             <span class="tag alt">Shard ${shardNumber}</span>
           </div>
-          <h3>${product.name}</h3>
-          <p>${product.description}</p>
-          <strong>$${product.price.toFixed(2)}</strong>
+          <h3>${escapeHtml(product.name)}</h3>
+          <p>${escapeHtml(product.description)}</p>
+          <span class="price-badge">$${product.price.toFixed(2)}</span>
         </article>
       `;
     })
@@ -70,35 +79,43 @@ function renderCart(cart) {
   }
 
   cartDetails.innerHTML = `
-    <p><strong>Cart ID:</strong> ${cart.id}</p>
-    <p><strong>Product IDs:</strong> ${cart.product_ids.length ? cart.product_ids.join(", ") : "Empty cart"}</p>
+    <div class="result-card">
+      <p class="result-title">Cart #${cart.id}</p>
+      <p><strong>Product IDs:</strong> ${cart.product_ids.length ? cart.product_ids.join(", ") : "Empty cart"}</p>
+    </div>
   `;
 }
 
 function renderOrder(result) {
-  const productNames = result.products.map((product) => product.name).join(", ");
+  const productNames = result.products.map((product) => escapeHtml(product.name)).join(", ");
 
   orderDetails.innerHTML = `
-    <p><strong>Order ID:</strong> ${result.order.id}</p>
-    <p><strong>Cart ID:</strong> ${result.order.cart_id}</p>
-    <p><strong>Total Price:</strong> $${result.order.total_price.toFixed(2)}</p>
-    <p><strong>Products:</strong> ${productNames || "No products"}</p>
+    <div class="result-card">
+      <p class="result-title">Order #${result.order.id}</p>
+      <p><strong>Cart ID:</strong> ${result.order.cart_id}</p>
+      <p><strong>Total Price:</strong> $${result.order.total_price.toFixed(2)}</p>
+      <p><strong>Products:</strong> ${productNames || "No products"}</p>
+    </div>
   `;
 }
 
 function renderClusterStatus(status) {
   if (!status.ok) {
-    clusterStatus.innerHTML = `<p>${status.message}</p>`;
+    clusterStatus.innerHTML = `<p>${escapeHtml(status.message)}</p>`;
     return;
   }
 
   clusterStatus.innerHTML = `
-    <p><strong>Replica Set:</strong> ${status.set}</p>
+    <div class="result-card">
+      <p class="result-title">Replica Set: ${escapeHtml(status.set)}</p>
+    </div>
     <ul class="cluster-list">
       ${status.members
         .map(
           (member) =>
-            `<li><strong>${member.name}</strong> - ${member.state} (health: ${member.health})</li>`
+            `<li><strong>${escapeHtml(member.name)}</strong><span class="member-state">${escapeHtml(
+              member.state
+            )}</span> health: ${escapeHtml(member.health)}</li>`
         )
         .join("")}
     </ul>
